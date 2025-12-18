@@ -35,8 +35,8 @@ export default defineConfig(({ mode }) => {
               type: 'image/png'
             }
           ],
-          start_url: '/',
-          scope: '/',
+          start_url: './',
+          scope: './',
           lang: 'ar',
           dir: 'rtl',
           orientation: 'portrait'
