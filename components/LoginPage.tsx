@@ -3,7 +3,6 @@ import { CreditCard, ArrowRight, Loader2, UserCog, ArrowLeft } from 'lucide-reac
 
 interface LoginPageProps {
   onLoginSuccess: (id: string) => void;
-  onTeacherLoginClick: () => void;
   onBack?: () => void;
 }
 

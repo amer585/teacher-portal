@@ -3,10 +3,9 @@ import { Illustration } from './Illustration';
 
 interface HeroProps {
   onLogin: () => void;
-  onInstall: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onLogin, onInstall }) => {
+export const Hero: React.FC<HeroProps> = ({ onLogin }) => {
   return (
     <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-24 py-12 lg:py-20 animate-in fade-in duration-700">
 
@@ -20,21 +19,12 @@ export const Hero: React.FC<HeroProps> = ({ onLogin, onInstall }) => {
           منصة رسمية لعرض تفاصيل الطلاب وبياناتهم الدراسية باستخدام الرقم القومي، بطريقة آمنة ومنظمة.
         </p>
 
-        <div className="flex flex-wrap gap-4 justify-end">
-          <button
-            onClick={onInstall}
-            className="bg-emerald-600 text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 text-lg flex items-center justify-center gap-2"
-          >
-            <span>تحميل التطبيق</span>
-          </button>
-
-          <button
-            onClick={onLogin}
-            className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 px-10 rounded-2xl shadow-xl shadow-slate-300/20 dark:shadow-none hover:shadow-2xl transition-all transform hover:-translate-y-1 text-lg flex items-center justify-center gap-2"
-          >
-            الدخول إلى عرض التفاصيل
-          </button>
-        </div>
+        <button
+          onClick={onLogin}
+          className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 px-10 rounded-2xl shadow-xl shadow-slate-300/20 dark:shadow-none hover:shadow-2xl transition-all transform hover:-translate-y-1 text-lg flex items-center justify-center gap-2"
+        >
+          الدخول إلى عرض التفاصيل
+        </button>
       </div>
 
       {/* Illustration */}

@@ -6,8 +6,7 @@ import { LoginPage } from './components/LoginPage';
 import { StudentDashboard } from './components/StudentDashboard';
 import { supabase } from './src/lib/supabase';
 import { StudentData, Assessment, MonthlyExam, AttendanceRecord, Announcement, SUBJECTS, GRADES } from './src/types';
-import { CheckCircle2, X, Trash2, Loader2, Download, Monitor, Smartphone } from 'lucide-react';
-import { HelpModal } from './components/HelpModal';
+import { CheckCircle2, X, Loader2 } from 'lucide-react';
 
 // --- CONSTANTS REMOVED (Imported from types) ---
 
@@ -244,28 +243,7 @@ export default function App() {
 
 
 
-  // PWA Install Logic
-  const [installPrompt, setInstallPrompt] = useState<any>(null);
-  const [showHelp, setShowHelp] = useState(false);
 
-  useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      setInstallPrompt(e);
-    });
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (installPrompt) {
-      installPrompt.prompt();
-      const { outcome } = await installPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setInstallPrompt(null);
-      }
-    } else {
-      setShowHelp(true);
-    }
-  };
 
   return (
     <div className={`min-h-screen flex flex-col font-sans relative text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 transition-colors duration-300`}>
@@ -280,13 +258,13 @@ export default function App() {
       />
 
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
-      <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
+
 
       <main className="flex-grow flex flex-col relative isolate justify-center">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 flex-grow flex flex-col justify-center">
           {loading && <div className="fixed inset-0 bg-white/50 z-50 flex items-center justify-center"><Loader2 className="animate-spin" /></div>}
           {currentView === 'landing' && (
-            <Hero onLogin={() => setCurrentView('login')} onInstall={handleInstallClick} />
+            <Hero onLogin={() => setCurrentView('login')} />
           )}
 
           {currentView === 'login' && (
