@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+import { TeacherHero } from './components/TeacherHero';
 import { Footer } from './components/Footer';
 import { LoginPage } from './components/LoginPage';
 import { TeacherLoginPage } from './components/TeacherLoginPage';
@@ -101,53 +102,6 @@ const generateWeeklyForSubjects = (weeksCount: number): Assessment[] => {
   return assessments;
 };
 
-const INITIAL_STUDENTS: StudentData[] = [
-  {
-    id: "12345678901234",
-    name: "أحمد محمد علي",
-    grade: "الاول الإعدادي",
-    weeklyAssessments: generateWeeklyForSubjects(8), // 8 weeks of data
-    monthlyExams: [
-      { id: 'm1', subject: "اللغة العربية", score: 42, maxScore: 50, status: 'present', date: '2023-10-15' },
-      { id: 'm2', subject: "اللغة الإنجليزية", score: 38, maxScore: 40, status: 'present', date: '2023-10-16' },
-      { id: 'm3', subject: "الرياضيات", score: 55, maxScore: 60, status: 'present', date: '2023-10-17' },
-      { id: 'm4', subject: "العلوم", score: 18, maxScore: 20, status: 'present', date: '2023-10-18' },
-    ],
-    attendanceRecords: [
-      { id: 'a1', date: '2023-10-01', status: 'present', lessonName: 'Introduction' },
-      { id: 'a2', date: '2023-10-02', status: 'absent', lessonName: 'Algebra Basics', note: 'مرضي' },
-      { id: 'a3', date: '2023-10-03', status: 'late', lessonName: 'Geometry', lateTime: '08:15' },
-    ],
-    announcements: [
-      { id: 'an1', title: 'موعد رحلة المدرسة', content: 'سيتم تنظيم رحلة إلى المتحف المصري يوم الخميس القادم. يرجى إحضار الموافقة.', date: '2023-10-20', author: 'أ. محمد', importance: 'normal', targetGrade: 'الكل' },
-      { id: 'an2', title: 'تنبيه هام', content: 'يرجى الالتزام بالزي المدرسي الكامل.', date: '2023-10-18', author: 'إدارة المدرسة', importance: 'high', targetGrade: 'الاول الإعدادي' }
-    ]
-  },
-  {
-    id: "98765432109876",
-    name: "سارة محمود حسن",
-    grade: "الاول الإعدادي",
-    weeklyAssessments: generateWeeklyForSubjects(8),
-    monthlyExams: [
-      { id: 'm5', subject: "اللغة العربية", score: 49, maxScore: 50, status: 'present', date: '2023-10-15' },
-      { id: 'm6', subject: "اللغة الإنجليزية", score: 40, maxScore: 40, status: 'present', date: '2023-10-16' },
-    ],
-    attendanceRecords: [],
-    announcements: []
-  },
-  {
-    id: "11223344556677",
-    name: "كريم عمر إبراهيم",
-    grade: "الثاني الإعدادي",
-    weeklyAssessments: generateWeeklyForSubjects(5),
-    monthlyExams: [
-      { id: 'm7', subject: "اللغة العربية", score: 35, maxScore: 50, status: 'present', date: '2023-10-15' },
-    ],
-    attendanceRecords: [],
-    announcements: []
-  }
-];
-
 // Toast Component
 const Toast = ({ message, onClose, type = 'success' }: { message: string; onClose: () => void, type?: 'success' | 'info' | 'error' }) => (
   <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-5 fade-in duration-300 pointer-events-none">
@@ -198,7 +152,8 @@ export default function App() {
     return false;
   });
 
-  const [currentView, setCurrentView] = useState<'landing' | 'login' | 'teacher-login' | 'dashboard' | 'teacher-dashboard'>('landing');
+  // Views: 'student-landing' | 'teacher-landing' | 'login' | 'teacher-login' | 'dashboard' | 'teacher-dashboard'
+  const [currentView, setCurrentView] = useState<'student-landing' | 'teacher-landing' | 'login' | 'teacher-login' | 'dashboard' | 'teacher-dashboard'>('student-landing');
 
   // Auto-route based on URL or Hash
   useEffect(() => {
@@ -206,9 +161,9 @@ export default function App() {
     const isStudentUrl = window.location.hash === '#student';
 
     if (isTeacherUrl) {
-      setCurrentView('teacher-login');
+      setCurrentView('teacher-landing');
     } else if (isStudentUrl) {
-      setCurrentView('login');
+      setCurrentView('student-landing');
     }
   }, []);
 
@@ -557,9 +512,13 @@ export default function App() {
 
   const handleLogout = () => {
     // Logout to login page instead of landing
-    setCurrentView('landing');
+    setCurrentView('student-landing');
     setCurrentStudentId(null);
   };
+
+  // Nav Handlers
+  const handleStudentPortalClick = () => setCurrentView('student-landing');
+  const handleTeacherPortalClick = () => setCurrentView('teacher-landing');
 
   const currentStudent = students.find(s => s.id === currentStudentId) || students[0];
 
@@ -579,20 +538,31 @@ export default function App() {
 
       <main className="flex-grow flex flex-col relative isolate">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 flex-grow flex flex-col">
-          {currentView === 'landing' && <Hero onLogin={handleStartJourney} onTeacherLogin={handleTeacherLoginClick} />}
+          {currentView === 'student-landing' && (
+            <Hero
+              onLogin={handleStartJourney}
+              onTeacherLogin={handleTeacherPortalClick}
+            />
+          )}
+
+          {currentView === 'teacher-landing' && (
+            <TeacherHero
+              onLogin={handleTeacherLoginClick}
+              onStudentPortal={handleStudentPortalClick}
+            />
+          )}
 
           {currentView === 'login' && (
             <LoginPage
               onLoginSuccess={handleStudentLoginSuccess}
-
-              onBack={() => setCurrentView('landing')}
+              onBack={handleStudentPortalClick}
             />
           )}
 
           {currentView === 'teacher-login' && (
             <TeacherLoginPage
               onLoginSuccess={handleTeacherLoginSuccess}
-              onBackToStudent={() => setCurrentView('login')}
+              onBackToStudent={handleStudentPortalClick}
             />
           )}
 
@@ -620,8 +590,6 @@ export default function App() {
           )}
         </div>
       </main>
-
-
 
       <Footer />
 
