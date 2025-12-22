@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { CreditCard, ArrowRight, Loader2, UserCog, ArrowLeft } from 'lucide-react';
+import { CreditCard, ArrowRight, Loader2 } from 'lucide-react';
 
 interface LoginPageProps {
   onLoginSuccess: (id: string) => void;
-
   onBack?: () => void;
 }
 
@@ -15,7 +14,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
     e.preventDefault();
     if (nationalId.length > 0) {
       setIsLoading(true);
-      // Simulate API call
       setTimeout(() => {
         setIsLoading(false);
         onLoginSuccess(nationalId);
@@ -74,9 +72,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
           </button>
         </form>
 
-
-
-
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="w-full mt-4 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-sm py-2 flex items-center justify-center gap-2 transition-colors"
+          >
+            <ArrowRight className="w-4 h-4" />
+            العودة للصفحة الرئيسية
+          </button>
+        )}
 
       </div>
     </div>
